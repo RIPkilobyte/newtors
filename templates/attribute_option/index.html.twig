@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AttributeOption index{% endblock %}
+
+{% block body %}
+    <h1>AttributeOption index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Value</th>
+                <th>Label</th>
+                <th>SortOrder</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for attribute_option in attribute_options %}
+            <tr>
+                <td>{{ attribute_option.id }}</td>
+                <td>{{ attribute_option.value }}</td>
+                <td>{{ attribute_option.label }}</td>
+                <td>{{ attribute_option.sortOrder }}</td>
+                <td>
+                    <a href="{{ path('app_attribute_option_show', {'id': attribute_option.id}) }}">show</a>
+                    <a href="{{ path('app_attribute_option_edit', {'id': attribute_option.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_attribute_option_new') }}">Create new</a>
+{% endblock %}

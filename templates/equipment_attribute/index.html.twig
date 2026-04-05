@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EquipmentAttribute index{% endblock %}
+
+{% block body %}
+    <h1>EquipmentAttribute index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Label</th>
+                <th>DataType</th>
+                <th>IsMultiple</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for equipment_attribute in equipment_attributes %}
+            <tr>
+                <td>{{ equipment_attribute.id }}</td>
+                <td>{{ equipment_attribute.name }}</td>
+                <td>{{ equipment_attribute.label }}</td>
+                <td>{{ equipment_attribute.dataType }}</td>
+                <td>{{ equipment_attribute.isMultiple ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_equipment_attribute_show', {'id': equipment_attribute.id}) }}">show</a>
+                    <a href="{{ path('app_equipment_attribute_edit', {'id': equipment_attribute.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_equipment_attribute_new') }}">Create new</a>
+{% endblock %}
