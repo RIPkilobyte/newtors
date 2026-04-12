@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\EquipmentAttributeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EquipmentAttributeRepository::class)]
@@ -12,38 +13,20 @@ class EquipmentAttribute
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $label = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(type: Types::STRING, length: 50)]
     private ?string $dataType = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private ?bool $isMultiple = null;
-
-    /**
-     * @var Collection<int, TypeAttribute>
-     */
-    #[ORM\OneToMany(targetEntity: TypeAttribute::class, mappedBy: 'attribute')]
-    private Collection $typeAttributes;
-
-    /**
-     * @var Collection<int, AttributeOption>
-     */
-    #[ORM\OneToMany(targetEntity: AttributeOption::class, mappedBy: 'attribute')]
-    private Collection $attributeOptions;
-
-    public function __construct()
-    {
-        $this->typeAttributes = new ArrayCollection();
-        $this->attributeOptions = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -91,69 +74,9 @@ class EquipmentAttribute
         return $this->isMultiple;
     }
 
-    public function setIsMultiple(bool $isMultiple): static
+    public function setIsMultiple(?bool $isMultiple): static
     {
         $this->isMultiple = $isMultiple;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TypeAttribute>
-     */
-    public function getTypeAttributes(): Collection
-    {
-        return $this->typeAttributes;
-    }
-
-    public function addTypeAttribute(TypeAttribute $typeAttribute): static
-    {
-        if (!$this->typeAttributes->contains($typeAttribute)) {
-            $this->typeAttributes->add($typeAttribute);
-            $typeAttribute->setAttribute($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTypeAttribute(TypeAttribute $typeAttribute): static
-    {
-        if ($this->typeAttributes->removeElement($typeAttribute)) {
-            // set the owning side to null (unless already changed)
-            if ($typeAttribute->getAttribute() === $this) {
-                $typeAttribute->setAttribute(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, AttributeOption>
-     */
-    public function getAttributeOptions(): Collection
-    {
-        return $this->attributeOptions;
-    }
-
-    public function addAttributeOption(AttributeOption $attributeOption): static
-    {
-        if (!$this->attributeOptions->contains($attributeOption)) {
-            $this->attributeOptions->add($attributeOption);
-            $attributeOption->setAttribute($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAttributeOption(AttributeOption $attributeOption): static
-    {
-        if ($this->attributeOptions->removeElement($attributeOption)) {
-            // set the owning side to null (unless already changed)
-            if ($attributeOption->getAttribute() === $this) {
-                $attributeOption->setAttribute(null);
-            }
-        }
 
         return $this;
     }

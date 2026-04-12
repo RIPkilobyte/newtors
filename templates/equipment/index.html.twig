@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}Управление техникой{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-header">
+            Список оборудования
+            <div class="pull-right">
+                <a href="{{ path('equipment_new') }}" class="btn btn-sm btn-success">Добавить технику</a>
+            </div>
+        </div>
+        <div id="equipment-table"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    var table = new Tabulator("#equipment-table", {
+        ajaxURL: "{{ path('equipment_api') }}",
+        ajaxParams: {},
+        pagination: "remote",
+        paginationSize: 20,
+        columns: [
+            {title: "Инв. номер", field: "inventory", headerFilter: "input"},
+            {title: "Серийный номер", field: "serial", headerFilter: "input"},
+            {title: "Тип", field: "typeName", headerFilter: "input"},
+            {title: "Район", field: "raionName", headerFilter: "input"},
+            {title: "Атрибуты", field: "attributes", formatter: "html", width: 300},
+            {title: "Действия", formatter: function(cell) {
+                var rowData = cell.getData();
+                var id = rowData.id;
+                return '<a href="/equipment/'+id+'/edit" class="btn btn-xs btn-info">Редактировать</a> ' +
+                       '<form method="post" action="/equipment/'+id+'" style="display:inline" onsubmit="return confirm(\'Удалить?\')">' +
+                       '<input type="hidden" name="_token" value="{{ csrf_token('delete') }}">' +
+                       '<button class="btn btn-xs btn-danger">Удалить</button></form>';
+            }, width: 150}
+        ],
+        ajaxResponse: function(url, params, response) {
+            return {data: response.data, last_page: response.last_page};
+        }
+    });
+</script>
+{% endblock %}

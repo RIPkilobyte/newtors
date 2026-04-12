@@ -1,23 +1,90 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Система учёта техники{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ace.min.css') }}">
+    <!--<link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="{{ asset('assets/css/tabulator.css') }}">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="no-skin">
+    <div class="navbar navbar-default" id="navbar">
+        <div class="navbar-container" id="navbar-container">
+            <div class="navbar-header pull-left">
+                <a href="{{ path('equipment_index') }}" class="navbar-brand">
+                    <small> <i class="fa fa-desktop"></i> Учёт техники </small>
+                </a>
+            </div>
+            <div class="navbar-buttons navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+                    <li class="light-blue user-profile">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <span class="user-info">
+                                <small>Привет,</small>
+                                {{ app.user.email }}
+                            </span>
+                            <i class="ace-icon fa fa-caret-down"></i>
+                        </a>
+                        <ul class="user-menu dropdown-menu dropdown-menu-right dropdown-yellow dropdown-caret dropdown-close">
+                            <li><a href="{{ path('app_logout') }}"><i class="ace-icon fa fa-power-off"></i> Выйти</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-        {% block javascripts %}
-        {% endblock %}
+    <div class="main-container" id="main-container">
+        <div id="sidebar" class="sidebar responsive">
+            <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                    <button class="btn btn-success"><i class="ace-icon fa fa-plus"></i></button>
+                    <button class="btn btn-info"><i class="ace-icon fa fa-pencil"></i></button>
+                </div>
+            </div>
+            <ul class="nav nav-list">
+                <li class="">
+                    <a href="{{ path('equipment_index') }}">
+                        <i class="menu-icon fa fa-list-alt"></i>
+                        <span class="menu-text"> Вся техника </span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ path('equipment_type_index') }}">
+                        <i class="menu-icon fa fa-tags"></i>
+                        <span class="menu-text"> Типы техники </span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ path('equipment_attribute_index') }}">
+                        <i class="menu-icon fa fa-cogs"></i>
+                        <span class="menu-text"> Атрибуты </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphpHotReload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+        <div class="main-content">
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>{% block page_title %}Панель управления{% endblock %}</h1>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        {% block body %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('assets/js/jquery-2.1.4.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+    <!--<script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>-->
+    <script src="{{ asset('assets/js/tabulator.min.js') }}"></script>
+    {% block javascripts %}{% endblock %}
+</body>
 </html>

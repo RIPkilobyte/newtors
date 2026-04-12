@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/equipment/type')]
 final class EquipmentTypeController extends AbstractController
 {
-    #[Route(name: 'app_equipment_type_index', methods: ['GET'])]
+    #[Route(name: 'equipment_type_index', methods: ['GET'])]
     public function index(EquipmentTypeRepository $equipmentTypeRepository): Response
     {
         return $this->render('equipment_type/index.html.twig', [
@@ -22,7 +22,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_equipment_type_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'equipment_type_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $equipmentType = new EquipmentType();
@@ -42,7 +42,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_equipment_type_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'equipment_type_show', methods: ['GET'])]
     public function show(EquipmentType $equipmentType): Response
     {
         return $this->render('equipment_type/show.html.twig', [
@@ -50,7 +50,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_equipment_type_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'equipment_type_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EquipmentType $equipmentType, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EquipmentTypeType::class, $equipmentType);
@@ -68,7 +68,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_equipment_type_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'equipment_type_delete', methods: ['POST'])]
     public function delete(Request $request, EquipmentType $equipmentType, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$equipmentType->getId(), $request->getPayload()->getString('_token'))) {

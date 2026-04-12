@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/equipment/attribute')]
 final class EquipmentAttributeController extends AbstractController
 {
-    #[Route(name: 'app_equipment_attribute_index', methods: ['GET'])]
+    #[Route(name: 'equipment_attribute_index', methods: ['GET'])]
     public function index(EquipmentAttributeRepository $equipmentAttributeRepository): Response
     {
         return $this->render('equipment_attribute/index.html.twig', [
@@ -22,7 +22,7 @@ final class EquipmentAttributeController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_equipment_attribute_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'equipment_attribute_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $equipmentAttribute = new EquipmentAttribute();
@@ -42,7 +42,7 @@ final class EquipmentAttributeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_equipment_attribute_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'equipment_attribute_show', methods: ['GET'])]
     public function show(EquipmentAttribute $equipmentAttribute): Response
     {
         return $this->render('equipment_attribute/show.html.twig', [
@@ -50,7 +50,7 @@ final class EquipmentAttributeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_equipment_attribute_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'equipment_attribute_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EquipmentAttribute $equipmentAttribute, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EquipmentAttributeType::class, $equipmentAttribute);
@@ -68,7 +68,7 @@ final class EquipmentAttributeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_equipment_attribute_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'equipment_attribute_delete', methods: ['POST'])]
     public function delete(Request $request, EquipmentAttribute $equipmentAttribute, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$equipmentAttribute->getId(), $request->getPayload()->getString('_token'))) {

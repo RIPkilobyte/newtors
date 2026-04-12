@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4 class="widget-title">Вход в систему</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+                    <form method="post">
+                        <fieldset>
+                            <label>Email</label>
+                            <input type="email" name="email" value="{{ last_username }}" class="form-control" autocomplete="username">
+                            <label>Пароль</label>
+                            <input type="password" name="password" class="form-control" autocomplete="current-password">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
