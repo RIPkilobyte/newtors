@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\EquipmentAttributeRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +28,9 @@ class EquipmentAttribute
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private ?bool $isMultiple = null;
+
+    #[ORM\OneToMany(targetEntity: EquipmentAttributeOption::class, mappedBy: 'attribute')]
+    private Collection $options;
 
     public function getId(): ?int
     {
@@ -78,6 +82,33 @@ class EquipmentAttribute
     {
         $this->isMultiple = $isMultiple;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EquipmentAttributeOption>
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(EquipmentAttributeOption $option): static
+    {
+        if (!$this->options->contains($option)) {
+            $this->options->add($option);
+            $option->setAttribute($this);
+        }
+        return $this;
+    }
+
+    public function removeOption(EquipmentAttributeOption $option): static
+    {
+        if ($this->options->removeElement($option)) {
+            if ($option->getAttribute() === $this) {
+                $option->setAttribute(null);
+            }
+        }
         return $this;
     }
 }

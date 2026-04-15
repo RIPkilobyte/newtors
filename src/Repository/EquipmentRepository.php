@@ -46,11 +46,10 @@ class EquipmentRepository extends ServiceEntityRepository
             } elseif ($field === 'serial') {
                 $qb->andWhere('e.serial LIKE :serial')->setParameter('serial', "%$value%");
             } elseif ($field === 'typeName') {
-                $qb->andWhere('t.name LIKE :type')->setParameter('type', "%$type%");
+                $qb->andWhere('t.name LIKE :type')->setParameter('type', "%$value%");
             } elseif ($field === 'raionName') {
                 $qb->andWhere('r.name LIKE :raion')->setParameter('raion', "%$value%");
             } else {
-                // атрибут из JSONB (для PostgreSQL)
                 // типа attributes->>'ram_gb' = '16'
                 $qb->andWhere("e.attributes->>:field = :val")
                    ->setParameter('field', $field)
@@ -68,11 +67,11 @@ class EquipmentRepository extends ServiceEntityRepository
         foreach ($data as $eq) {
             $items[] = [
                 'id' => $eq->getId(),
-                'inventoryNumber' => $eq->getInventory(),
+                'inventory' => $eq->getInventory(),
                 'serial' => $eq->getSerial(),
                 'typeName' => $eq->getType()->getName(),
                 'raionName' => $eq->getRaion() ? $eq->getRaion()->getName() : '',
-                'attributes' => $eq->getAttributes(),
+                'attributes' => json_encode($eq->getAttributes(), JSON_UNESCAPED_UNICODE),
             ];
         }
 

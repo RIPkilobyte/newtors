@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Equipment;
 use App\Form\EquipmentType;
 use App\Repository\EquipmentRepository;
+use App\Repository\EquipmentTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,27 +36,21 @@ final class EquipmentController extends AbstractController
 
         $result = $repository->findByFilters($user, $filters, $page, $limit);
 
-//        $data = [];
-//        foreach ($result['data'] as $equipment) {
-//            //dd($result['data']);
-//            $data[] = [
-//                'id' => $equipment->getId(),
-//                'inventoryNumber' => $equipment->getInventory(),
-//                'typeName' => $equipment->getType() ? $equipment->getType()->getName() : '',
-//                'raionName' => $equipment->getRaion() ? $equipment->getRaion()->getName() : '',
-//                'attributes' => json_encode($equipment->getAttributes(), JSON_UNESCAPED_UNICODE),
-//            ];
-//        }
-        return new JsonResponse([
-            'data' => $result['data'],
-            'total' => $result['total'],
-            'last_page' => ceil($result['total'] / $limit),
-        ]);
+//        return new JsonResponse([
+//            'data' => [],
+//            'total' => $result['total'],
+//            'last_page' => round($result['total'] / $limit, 0),
+//        ]);
+//        dd([
+//            'data' => [],
+//            'total' => $result['total'],
+//            'last_page' => round($result['total'] / $limit, 0),
+//        ]);
 
         return $this->json([
             'data' => $result['data'],
             'total' => $result['total'],
-            'last_page' => ceil($result['total'] / $limit),
+            'last_page' => max(1, (int) ceil($result['total'] / $limit)),
         ]);
     }
 
@@ -114,5 +109,34 @@ final class EquipmentController extends AbstractController
         }
 
         return $this->redirectToRoute('equipment_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/equipment/attributes/{typeId}', name: 'equipment_attributes_by_type')]
+    public function getAttributesByType(int $typeId, EquipmentTypeRepository $typeRepo): JsonResponse
+    {
+        $type = $typeRepo->find($typeId);
+        if (!$type) {
+            return $this->json([]);
+        }
+        $attributesData = [];
+        foreach ($type->getTypeAttributes() as $typeAttr) {
+            $attr = $typeAttr->getAttribute();
+            $options = [];
+            if ($attr->isMultiple()) {
+                foreach ($attr->getOptions() as $opt) {
+                    $options[] = ['value' => $opt->getValue(), 'label' => $opt->getLabel()];
+                }
+            }
+            $attributesData[] = [
+                'id' => $attr->getId(),
+                'name' => $attr->getName(),
+                'label' => $attr->getLabel(),
+                'dataType' => $attr->getDataType(),
+                'isMultiple' => $attr->isMultiple(),
+                'required' => $typeAttr->isRequired(),
+                'options' => $options,
+            ];
+        }
+        return $this->json($attributesData);
     }
 }

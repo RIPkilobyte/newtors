@@ -6,6 +6,7 @@ use App\Entity\EquipmentType;
 use App\Form\EquipmentTypeType;
 use App\Repository\EquipmentTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,10 @@ final class EquipmentTypeController extends AbstractController
     #[Route(name: 'equipment_type_index', methods: ['GET'])]
     public function index(EquipmentTypeRepository $equipmentTypeRepository): Response
     {
+        $conn = $equipmentTypeRepository->getConnection();
+        $sql = 'SELECT * FROM equipment_type';
+        $types = $conn->fetchAllAssociative($sql);
+        dd($types); // Если работает – проблема в сущности
         return $this->render('equipment_type/index.html.twig', [
             'equipment_types' => $equipmentTypeRepository->findAll(),
         ]);
@@ -33,7 +38,7 @@ final class EquipmentTypeController extends AbstractController
             $entityManager->persist($equipmentType);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_equipment_type_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('equipment_type_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('equipment_type/new.html.twig', [
@@ -59,7 +64,7 @@ final class EquipmentTypeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_equipment_type_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('equipment_type_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('equipment_type/edit.html.twig', [
@@ -76,6 +81,6 @@ final class EquipmentTypeController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_equipment_type_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('equipment_type_index', [], Response::HTTP_SEE_OTHER);
     }
 }

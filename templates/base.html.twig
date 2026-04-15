@@ -19,6 +19,7 @@
                 </a>
             </div>
             <div class="navbar-buttons navbar-header pull-right" role="navigation">
+                {% if is_granted("ROLE_USER") %}
                 <ul class="nav ace-nav">
                     <li class="light-blue user-profile">
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle">
@@ -33,6 +34,7 @@
                         </ul>
                     </li>
                 </ul>
+                {% endif %}
             </div>
         </div>
     </div>

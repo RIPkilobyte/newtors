@@ -17,6 +17,7 @@ class EquipmentTypeAttribute
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: EquipmentType::class)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?EquipmentType $type = null;
 
     #[ORM\ManyToOne(targetEntity: EquipmentAttribute::class)]
