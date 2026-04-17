@@ -18,10 +18,10 @@ class EquipmentTypeAttribute
 
     #[ORM\ManyToOne(targetEntity: EquipmentType::class)]
     #[ORM\JoinColumn(nullable: true)]
-    private ?EquipmentType $type = null;
+    private ?EquipmentType $equipmentType = null;
 
     #[ORM\ManyToOne(targetEntity: EquipmentAttribute::class)]
-    private ?EquipmentAttribute $attribute = null;
+    private ?EquipmentAttribute $equipmentAttribute = null;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private ?bool $required = null;
@@ -34,26 +34,26 @@ class EquipmentTypeAttribute
         return $this->id;
     }
 
-    public function getType(): ?EquipmentType
+    public function getEquipmentType(): ?EquipmentType
     {
-        return $this->type;
+        return $this->equipmentType;
     }
 
-    public function setType(?EquipmentType $type): static
+    public function setEquipmentType(?EquipmentType $equipmentType): static
     {
-        $this->type = $type;
+        $this->equipmentType = $equipmentType;
 
         return $this;
     }
 
-    public function getAttribute(): ?EquipmentAttribute
+    public function getEquipmentAttribute(): ?EquipmentAttribute
     {
-        return $this->attribute;
+        return $this->equipmentAttribute;
     }
 
-    public function setAttribute(?EquipmentAttribute $attribute): static
+    public function setEquipmentAttribute(?EquipmentAttribute $equipmentAttribute): static
     {
-        $this->attribute = $attribute;
+        $this->equipmentAttribute = $equipmentAttribute;
 
         return $this;
     }

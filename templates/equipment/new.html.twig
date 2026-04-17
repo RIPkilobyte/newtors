@@ -1,11 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Equipment{% endblock %}
-
 {% block body %}
-    <h1>Create new Equipment</h1>
+    <h1>Новое оборудование</h1>
 
-    {{ include('equipment/_form.html.twig') }}
+    {{ form_start(form) }}
+    {{ form_row(form.inventory) }}
+    {{ form_row(form.serial) }}
+    {{ form_row(form.raion) }}
+    {{ form_row(form.equipmentType) }}
 
-    <a href="{{ path('equipment_index') }}">back to list</a>
+    <div id="attributes-container"></div>
+
+    <button class="btn btn-success">Сохранить</button>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const typeSelect = document.getElementById('equipment_equipmentType');
+        const attributesContainer = document.getElementById('attributes-container');
+        let currentAttributes = [];
+
+        function loadAttributes(typeId) {
+            if (!typeId) {
+                attributesContainer.innerHTML = '';
+                return;
+            }
+            fetch('/equipment/attributes/' + typeId)
+                .then(response => response.json())
+                .then(attributes => {
+                    currentAttributes = attributes;
+                    renderAttributes(attributes, {});
+                });
+        }
+
+        function renderAttributes(attributes, currentValues) {
+            if (!attributes.length) {
+                attributesContainer.innerHTML = '<div class="alert alert-info">Для выбранного типа нет дополнительных атрибутов.</div>';
+                return;
+            }
+            // Отправляем POST-запрос на сервер для рендеринга шаблона
+            fetch('/equipment/render-attributes', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({attributes: attributes, currentValues: currentValues})
+            })
+                .then(response => response.text())
+                .then(html => {
+                    attributesContainer.innerHTML = html;
+                });
+        }
+
+        typeSelect.addEventListener('change', function() {
+            loadAttributes(this.value);
+        });
+
+        // При загрузке страницы (если тип уже выбран, например при редактировании)
+        if (typeSelect.value) {
+            loadAttributes(typeSelect.value);
+        }
+
+        // Для редактирования: передаём текущие значения атрибутов
+        // currentValues нужно передать из PHP
+        {% if equipment.equipmentAttributes is defined %}
+        const currentValues = {{ equipment.equipmentAttributes|json_encode|raw }};
+        {% else %}
+        const currentValues = {};
+        {% endif %}
+        // Если атрибуты уже загружены, перерисовываем с currentValues
+        // (можно доработать)
+    </script>
 {% endblock %}

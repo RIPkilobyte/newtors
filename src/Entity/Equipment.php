@@ -26,10 +26,10 @@ class Equipment
     private ?Raion $raion = null;
 
     #[ORM\ManyToOne(targetEntity: EquipmentType::class)]
-    private ?EquipmentType $type = null;
+    private ?EquipmentType $equipmentType = null;
 
     #[ORM\Column(type: Types::JSONB, nullable: true)]
-    private mixed $attributes = null;
+    private mixed $equipmentAttributes = null;
 
     public function getId(): ?int
     {
@@ -72,26 +72,26 @@ class Equipment
         return $this;
     }
 
-    public function getType(): ?EquipmentType
+    public function getEquipmentType(): ?EquipmentType
     {
-        return $this->type;
+        return $this->equipmentType;
     }
 
-    public function setType(?EquipmentType $type): static
+    public function setEquipmentType(?EquipmentType $equipmentType): static
     {
-        $this->type = $type;
+        $this->equipmentType = $equipmentType;
 
         return $this;
     }
 
-    public function getAttributes(): mixed
+    public function getEquipmentAttributes(): mixed
     {
-        return $this->attributes;
+        return $this->equipmentAttributes;
     }
 
-    public function setAttributes(mixed $attributes): static
+    public function setEquipmentAttributes(mixed $equipmentAttributes): static
     {
-        $this->attributes = $attributes;
+        $this->equipmentAttributes = $equipmentAttributes;
 
         return $this;
     }

@@ -17,7 +17,7 @@ class EquipmentAttributeOption
     private ?int $id = null;
 
     #[ORM\ManyToOne( targetEntity: EquipmentAttribute::class)]
-    private ?EquipmentAttribute $attribute = null;
+    private ?EquipmentAttribute $equipmentAttribute = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $value = null;
@@ -33,14 +33,14 @@ class EquipmentAttributeOption
         return $this->id;
     }
 
-    public function getAttribute(): ?EquipmentAttribute
+    public function getEquipmentAttribute(): ?EquipmentAttribute
     {
-        return $this->attribute;
+        return $this->equipmentAttribute;
     }
 
-    public function setAttribute(?EquipmentAttribute $attribute): static
+    public function setEquipmentAttribute(?EquipmentAttribute $equipmentAttribute): static
     {
-        $this->attribute = $attribute;
+        $this->equipmentAttribute = $equipmentAttribute;
 
         return $this;
     }

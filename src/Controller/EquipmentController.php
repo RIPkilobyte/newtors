@@ -18,6 +18,18 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/equipment')]
 final class EquipmentController extends AbstractController
 {
+    #[Route('/render-attributes', name: 'equipment_render_attributes', methods: ['POST'])]
+    public function renderAttributes(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $attributes = $data['attributes'] ?? [];
+        $currentValues = $data['currentValues'] ?? [];
+        return $this->render('equipment/_attributes_form.html.twig', [
+            'attributes' => $attributes,
+            'currentValues' => $currentValues,
+        ]);
+    }
+
     #[Route(name: 'equipment_index', methods: ['GET'])]
     public function index(EquipmentRepository $equipmentRepository): Response
     {
@@ -36,17 +48,6 @@ final class EquipmentController extends AbstractController
 
         $result = $repository->findByFilters($user, $filters, $page, $limit);
 
-//        return new JsonResponse([
-//            'data' => [],
-//            'total' => $result['total'],
-//            'last_page' => round($result['total'] / $limit, 0),
-//        ]);
-//        dd([
-//            'data' => [],
-//            'total' => $result['total'],
-//            'last_page' => round($result['total'] / $limit, 0),
-//        ]);
-
         return $this->json([
             'data' => $result['data'],
             'total' => $result['total'],
@@ -62,6 +63,8 @@ final class EquipmentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $attributesData = $request->request->all('attributes') ?? [];
+            $equipment->setEquipmentAttributes($attributesData);
             $entityManager->persist($equipment);
             $entityManager->flush();
 
@@ -89,6 +92,8 @@ final class EquipmentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $attributesData = $request->request->all('attributes') ?? [];
+            $equipment->setEquipmentAttributes($attributesData);
             $entityManager->flush();
 
             return $this->redirectToRoute('equipment_index', [], Response::HTTP_SEE_OTHER);
@@ -111,7 +116,7 @@ final class EquipmentController extends AbstractController
         return $this->redirectToRoute('equipment_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/equipment/attributes/{typeId}', name: 'equipment_attributes_by_type')]
+    #[Route('/attributes/{typeId}', name: 'equipment_attributes_by_type')]
     public function getAttributesByType(int $typeId, EquipmentTypeRepository $typeRepo): JsonResponse
     {
         $type = $typeRepo->find($typeId);
@@ -119,11 +124,11 @@ final class EquipmentController extends AbstractController
             return $this->json([]);
         }
         $attributesData = [];
-        foreach ($type->getTypeAttributes() as $typeAttr) {
-            $attr = $typeAttr->getAttribute();
+        foreach ($type->getEquipmentTypeAttributes() as $typeAttr) {
+            $attr = $typeAttr->getEquipmentAttribute();
             $options = [];
             if ($attr->isMultiple()) {
-                foreach ($attr->getOptions() as $opt) {
+                foreach ($attr->getEquipmentAttributeOption() as $opt) {
                     $options[] = ['value' => $opt->getValue(), 'label' => $opt->getLabel()];
                 }
             }

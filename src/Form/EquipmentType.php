@@ -18,12 +18,11 @@ class EquipmentType extends AbstractType
         $builder
             ->add('inventory')
             ->add('serial')
-            ->add('attributes')
             ->add('raion', EntityType::class, [
                 'class' => Raion::class,
                 'choice_label' => 'name',
             ])
-            ->add('type', EntityType::class, [
+            ->add('equipmentType', EntityType::class, [
                 'class' => \App\Entity\EquipmentType::class,
                 'choice_label' => 'name',
             ])

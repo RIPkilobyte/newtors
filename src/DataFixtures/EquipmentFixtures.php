@@ -43,6 +43,10 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         $printerType->setName('Принтер');
         $manager->persist($printerType);
 
+        $laptopType = new EquipmentType();
+        $laptopType->setName('Ноутбук');
+        $manager->persist($laptopType);
+
         // EquipmentAttribute
         $cpuAttr = new EquipmentAttribute();
         $cpuAttr->setName('processor');
@@ -79,11 +83,18 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         $printFormatAttr->setIsMultiple(false);
         $manager->persist($printFormatAttr);
 
+        $batteryAttr = new EquipmentAttribute();
+        $batteryAttr->setName('battery_life');
+        $batteryAttr->setLabel('Время работы (часы)');
+        $batteryAttr->setDataType('float');
+        $batteryAttr->setIsMultiple(false);
+        $manager->persist($batteryAttr);
+
         // EquipmentAttributeOption
-        $cpuOptions = ['Intel i5', 'Intel i7', 'AMD Ryzen 5'];
+        $cpuOptions = ['Intel i5', 'Intel i7', 'AMD Ryzen 5', 'AMD Ryzen 7'];
         foreach ($cpuOptions as $opt) {
             $option = new EquipmentAttributeOption();
-            $option->setAttribute($cpuAttr);
+            $option->setEquipmentAttribute($cpuAttr);
             $option->setValue($opt);
             $option->setLabel($opt);
             $option->setSort(0);
@@ -93,7 +104,7 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         $printOptions = ['A4', 'A3', 'A2'];
         foreach ($printOptions as $opt) {
             $option = new EquipmentAttributeOption();
-            $option->setAttribute($printFormatAttr);
+            $option->setEquipmentAttribute($printFormatAttr);
             $option->setValue($opt);
             $option->setLabel($opt);
             $option->setSort(0);
@@ -101,60 +112,117 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         }
 
         // EquipmentTypeAttribute
-        $typeAttribute = new EquipmentTypeAttribute();
-        $typeAttribute->setType($pcType);
-        $typeAttribute->setAttribute($cpuAttr);
-        $typeAttribute->setRequired(true);
-        $typeAttribute->setSort(0);
-        $manager->persist($typeAttribute);
+        $typeAttr = new EquipmentTypeAttribute();
+        $typeAttr->setEquipmentType($pcType);
+        $typeAttr->setEquipmentAttribute($cpuAttr);
+        $typeAttr->setRequired(true);
+        $typeAttr->setSort(0);
+        $manager->persist($typeAttr);
 
-        $typeAttribute2 = new EquipmentTypeAttribute();
-        $typeAttribute2->setType($pcType);
-        $typeAttribute2->setAttribute($ramAttr);
-        $typeAttribute2->setRequired(true);
-        $typeAttribute2->setSort(0);
-        $manager->persist($typeAttribute2);
+        $typeAttr2 = new EquipmentTypeAttribute();
+        $typeAttr2->setEquipmentType($pcType);
+        $typeAttr2->setEquipmentAttribute($ramAttr);
+        $typeAttr2->setRequired(true);
+        $typeAttr2->setSort(0);
+        $manager->persist($typeAttr2);
 
-        $typeAttribute3 = new EquipmentTypeAttribute();
-        $typeAttribute3->setType($pcType);
-        $typeAttribute3->setAttribute($hddAttr);
-        $typeAttribute3->setRequired(false);
-        $typeAttribute3->setSort(0);
-        $manager->persist($typeAttribute3);
+        $typeAttr3 = new EquipmentTypeAttribute();
+        $typeAttr3->setEquipmentType($pcType);
+        $typeAttr3->setEquipmentAttribute($hddAttr);
+        $typeAttr3->setRequired(false);
+        $typeAttr3->setSort(0);
+        $manager->persist($typeAttr3);
 
-        $typeAttribute4 = new EquipmentTypeAttribute();
-        $typeAttribute4->setType($monitorType);
-        $typeAttribute4->setAttribute($diagonalAttr);
-        $typeAttribute4->setRequired(true);
-        $typeAttribute4->setSort(0);
-        $manager->persist($typeAttribute4);
+        $typeAttr4 = new EquipmentTypeAttribute();
+        $typeAttr4->setEquipmentType($monitorType);
+        $typeAttr4->setEquipmentAttribute($diagonalAttr);
+        $typeAttr4->setRequired(true);
+        $typeAttr4->setSort(0);
+        $manager->persist($typeAttr4);
 
-        $typeAttribute5 = new EquipmentTypeAttribute();
-        $typeAttribute5->setType($printerType);
-        $typeAttribute5->setAttribute($printFormatAttr);
-        $typeAttribute5->setRequired(true);
-        $typeAttribute5->setSort(0);
-        $manager->persist($typeAttribute5);
+        $typeAttr5 = new EquipmentTypeAttribute();
+        $typeAttr5->setEquipmentType($printerType);
+        $typeAttr5->setEquipmentAttribute($printFormatAttr);
+        $typeAttr5->setRequired(true);
+        $typeAttr5->setSort(0);
+        $manager->persist($typeAttr5);
 
-        $equipment1 = new Equipment();
-        $equipment1->setInventory('PC-001');
-        $equipment1->setSerial('123456789');
-        $equipment1->setType($pcType);
-        $equipment1->setRaion($raion00);
-        $equipment1->setAttributes([
-            'processor' => 'Intel i7',
-            'ram_gb' => 16,
-            'hdd' => ['500GB SSD', '1TB HDD']
-        ]);
-        $manager->persist($equipment1);
+        $typeAttr6 = new EquipmentTypeAttribute();
+        $typeAttr6->setEquipmentType($laptopType);
+        $typeAttr6->setEquipmentAttribute($cpuAttr);
+        $typeAttr6->setRequired(true);
+        $typeAttr6->setSort(0);
+        $manager->persist($typeAttr6);
 
-        $equipment2 = new Equipment();
-        $equipment2->setInventory('MON-001');
-        $equipment2->setSerial('9876543241');
-        $equipment2->setType($monitorType);
-        $equipment2->setRaion($raion41);
-        $equipment2->setAttributes(['diagonal_inch' => 24.5]);
-        $manager->persist($equipment2);
+        $typeAttr7 = new EquipmentTypeAttribute();
+        $typeAttr7->setEquipmentType($laptopType);
+        $typeAttr7->setEquipmentAttribute($ramAttr);
+        $typeAttr7->setRequired(true);
+        $typeAttr7->setSort(0);
+        $manager->persist($typeAttr7);
+
+        $typeAttr8 = new EquipmentTypeAttribute();
+        $typeAttr8->setEquipmentType($laptopType);
+        $typeAttr8->setEquipmentAttribute($batteryAttr);
+        $typeAttr8->setRequired(false);
+        $typeAttr8->setSort(0);
+        $manager->persist($typeAttr8);
+
+        // Equipment
+        $equipmentList = [];
+        $equipmentList[] = ['inventory' => 'PC-001', 'serial' => '123456789', 'type' => $pcType, 'raion' => $raion00,
+            'attrs' => ['processor' => 'Intel i7', 'ram_gb' => 16, 'hdd' => ['500GB SSD', '1TB HDD']]];
+        $equipmentList[] = ['inventory' => 'MON-001', 'serial' => '9876543241', 'type' => $monitorType, 'raion' => $raion41,
+            'attrs' => ['diagonal_inch' => 24.5]];
+
+        $cpuVariants = ['Intel i5', 'Intel i7', 'AMD Ryzen 5', 'AMD Ryzen 7'];
+        $ramVariants = [8, 16, 32, 64];
+        $hddVariants = [['256GB SSD'], ['512GB SSD'], ['1TB HDD'], ['256GB SSD', '1TB HDD']];
+        $diagonalVariants = [21.5, 24, 27, 32];
+        $printVariants = ['A4', 'A3'];
+        $batteryVariants = [3.5, 5, 7, 9];
+        $types = [$pcType, $monitorType, $printerType, $laptopType];
+        $raions = [$raion00, $raion41];
+
+        for ($i = 1; $i <= 20; $i++) {
+            $type = $types[array_rand($types)];
+            $raion = $raions[array_rand($raions)];
+            $inventory = sprintf('%s-%03d', $type->getName() === 'ПК' ? 'PC' : ($type->getName() === 'Монитор' ? 'MON' : ($type->getName() === 'Принтер' ? 'PRN' : 'NB')), $i + 10);
+            $serial = 'SN' . rand(100000, 999999) . $i;
+
+            $attrs = [];
+            if ($type === $pcType) {
+                $attrs['processor'] = $cpuVariants[array_rand($cpuVariants)];
+                $attrs['ram_gb'] = $ramVariants[array_rand($ramVariants)];
+                if (rand(0, 1)) $attrs['hdd'] = $hddVariants[array_rand($hddVariants)];
+            } elseif ($type === $monitorType) {
+                $attrs['diagonal_inch'] = $diagonalVariants[array_rand($diagonalVariants)];
+            } elseif ($type === $printerType) {
+                $attrs['print_format'] = $printVariants[array_rand($printVariants)];
+            } elseif ($type === $laptopType) {
+                $attrs['processor'] = $cpuVariants[array_rand($cpuVariants)];
+                $attrs['ram_gb'] = $ramVariants[array_rand($ramVariants)];
+                if (rand(0, 1)) $attrs['battery_life'] = $batteryVariants[array_rand($batteryVariants)];
+            }
+
+            $equipmentList[] = [
+                'inventory' => $inventory,
+                'serial' => $serial,
+                'type' => $type,
+                'raion' => $raion,
+                'attrs' => $attrs
+            ];
+        }
+
+        foreach ($equipmentList as $item) {
+            $eq = new Equipment();
+            $eq->setInventory($item['inventory']);
+            $eq->setSerial($item['serial']);
+            $eq->setEquipmentType($item['type']);
+            $eq->setRaion($item['raion']);
+            $eq->setEquipmentAttributes($item['attrs']);
+            $manager->persist($eq);
+        }
 
         $manager->flush();
     }

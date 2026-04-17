@@ -29,8 +29,8 @@ class EquipmentAttribute
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private ?bool $isMultiple = null;
 
-    #[ORM\OneToMany(targetEntity: EquipmentAttributeOption::class, mappedBy: 'attribute')]
-    private Collection $options;
+    #[ORM\OneToMany(targetEntity: EquipmentAttributeOption::class, mappedBy: 'equipmentAttribute')]
+    private Collection $equipmentAttributeOption;
 
     public function getId(): ?int
     {
@@ -88,25 +88,25 @@ class EquipmentAttribute
     /**
      * @return Collection<int, EquipmentAttributeOption>
      */
-    public function getOptions(): Collection
+    public function getEquipmentAttributeOption(): Collection
     {
-        return $this->options;
+        return $this->equipmentAttributeOption;
     }
 
-    public function addOption(EquipmentAttributeOption $option): static
+    public function addEquipmentAttributeOption(EquipmentAttributeOption $equipmentAttributeOption): static
     {
-        if (!$this->options->contains($option)) {
-            $this->options->add($option);
-            $option->setAttribute($this);
+        if (!$this->equipmentAttributeOption->contains($equipmentAttributeOption)) {
+            $this->equipmentAttributeOption->add($equipmentAttributeOption);
+            $equipmentAttributeOption->setEquipmentAttribute($this);
         }
         return $this;
     }
 
-    public function removeOption(EquipmentAttributeOption $option): static
+    public function removeEquipmentAttributeOption(EquipmentAttributeOption $equipmentAttributeOption): static
     {
-        if ($this->options->removeElement($option)) {
-            if ($option->getAttribute() === $this) {
-                $option->setAttribute(null);
+        if ($this->equipmentAttributeOption->removeElement($equipmentAttributeOption)) {
+            if ($equipmentAttributeOption->getEquipmentAttribute() === $this) {
+                $equipmentAttributeOption->setEquipmentAttribute(null);
             }
         }
         return $this;

@@ -1,0 +1,26 @@
+{% for attr in attributes %}
+    <div class="form-group attribute-group" data-attribute-id="{{ attr.id }}" data-required="{{ attr.required ? 'true' : 'false' }}">
+        <label>{{ attr.label }}{% if attr.required %} <span class="text-danger">*</span>{% endif %}</label>
+        {% if attr.dataType == 'select' %}
+            <select name="attributes[{{ attr.name }}]" class="form-control" {% if attr.required %}required{% endif %}>
+                <option value="">Выберите</option>
+                {% for option in attr.options %}
+                    <option value="{{ option.value }}" {% if currentValues[attr.name] is defined and currentValues[attr.name] == option.value %}selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+            </select>
+        {% elseif attr.dataType == 'integer' %}
+            <input type="number" name="attributes[{{ attr.name }}]" class="form-control" value="{{ currentValues[attr.name]|default('') }}" {% if attr.required %}required{% endif %}>
+        {% elseif attr.dataType == 'float' %}
+            <input type="number" step="any" name="attributes[{{ attr.name }}]" class="form-control" value="{{ currentValues[attr.name]|default('') }}" {% if attr.required %}required{% endif %}>
+        {% elseif attr.dataType == 'string' and attr.isMultiple %}
+            {# Для множественных строк используем select multiple #}
+            <select name="attributes[{{ attr.name }}][]" multiple class="form-control" {% if attr.required %}required{% endif %}>
+                {% for option in attr.options %}
+                    <option value="{{ option.value }}" {% if currentValues[attr.name] is defined and option.value in currentValues[attr.name] %}selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+            </select>
+        {% else %}
+            <input type="text" name="attributes[{{ attr.name }}]" class="form-control" value="{{ currentValues[attr.name]|default('') }}" {% if attr.required %}required{% endif %}>
+        {% endif %}
+    </div>
+{% endfor %}

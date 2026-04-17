@@ -6,22 +6,17 @@ use App\Entity\EquipmentType;
 use App\Form\EquipmentTypeType;
 use App\Repository\EquipmentTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/equipment/type')]
+#[Route('/catalog/type')]
 final class EquipmentTypeController extends AbstractController
 {
     #[Route(name: 'equipment_type_index', methods: ['GET'])]
     public function index(EquipmentTypeRepository $equipmentTypeRepository): Response
     {
-        $conn = $equipmentTypeRepository->getConnection();
-        $sql = 'SELECT * FROM equipment_type';
-        $types = $conn->fetchAllAssociative($sql);
-        dd($types); // Если работает – проблема в сущности
         return $this->render('equipment_type/index.html.twig', [
             'equipment_types' => $equipmentTypeRepository->findAll(),
         ]);
@@ -47,7 +42,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'equipment_type_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'equipment_type_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(EquipmentType $equipmentType): Response
     {
         return $this->render('equipment_type/show.html.twig', [
@@ -55,7 +50,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'equipment_type_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'equipment_type_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, EquipmentType $equipmentType, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EquipmentTypeType::class, $equipmentType);
@@ -73,7 +68,7 @@ final class EquipmentTypeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'equipment_type_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'equipment_type_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, EquipmentType $equipmentType, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$equipmentType->getId(), $request->getPayload()->getString('_token'))) {

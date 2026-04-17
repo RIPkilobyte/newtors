@@ -22,7 +22,7 @@ class EquipmentRepository extends ServiceEntityRepository
     public function findByFilters(?User $user, array $filters, int $page, int $limit): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->leftJoin('e.type', 't')
+            ->leftJoin('e.equipmentType', 't')
             ->addSelect('t')
             ->leftJoin('e.raion', 'r')
             ->addSelect('r');
@@ -38,7 +38,6 @@ class EquipmentRepository extends ServiceEntityRepository
         foreach ($filters as $filter) {
             $field = $filter['field'] ?? null;
             $value = $filter['value'] ?? null;
-            $type = $filter['type'] ?? '=';
             if (!$field || $value === null) continue;
 
             if ($field === 'inventory') {
@@ -46,12 +45,12 @@ class EquipmentRepository extends ServiceEntityRepository
             } elseif ($field === 'serial') {
                 $qb->andWhere('e.serial LIKE :serial')->setParameter('serial', "%$value%");
             } elseif ($field === 'typeName') {
-                $qb->andWhere('t.name LIKE :type')->setParameter('type', "%$value%");
+                $qb->andWhere('t.name LIKE :equipmentType')->setParameter('equipmentType', "%$value%");
             } elseif ($field === 'raionName') {
                 $qb->andWhere('r.name LIKE :raion')->setParameter('raion', "%$value%");
             } else {
                 // типа attributes->>'ram_gb' = '16'
-                $qb->andWhere("e.attributes->>:field = :val")
+                $qb->andWhere("e.equipmentAttributes->>:field = :val")
                    ->setParameter('field', $field)
                    ->setParameter('val', $value);
             }
@@ -69,9 +68,9 @@ class EquipmentRepository extends ServiceEntityRepository
                 'id' => $eq->getId(),
                 'inventory' => $eq->getInventory(),
                 'serial' => $eq->getSerial(),
-                'typeName' => $eq->getType()->getName(),
+                'typeName' => $eq->getEquipmentType()->getName(),
                 'raionName' => $eq->getRaion() ? $eq->getRaion()->getName() : '',
-                'attributes' => json_encode($eq->getAttributes(), JSON_UNESCAPED_UNICODE),
+                'attributes' => json_encode($eq->getEquipmentAttributes(), JSON_UNESCAPED_UNICODE),
             ];
         }
 

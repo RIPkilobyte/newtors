@@ -22,14 +22,23 @@
     var table = new Tabulator("#equipment-table", {
         ajaxURL: "{{ path('equipment_api') }}",
         ajaxConfig: "GET",
-        pagination: "remote",
+        fitColumns: true,
+        pagination: true,
+        paginationMode: "remote",
         paginationSize: 20,
+        ajaxResponse: function(url, params, response) {
+            return {
+                data: response.data,   // массив строк таблицы
+                last_page: response.last_page,  // общее количество записей для пагинации
+                total: response.total
+            };
+        },
         columns: [
             {title: "Инв. номер", field: "inventory", headerFilter: "input"},
             {title: "Серийный номер", field: "serial", headerFilter: "input"},
             {title: "Тип", field: "typeName", headerFilter: "input"},
             {title: "Район", field: "raionName", headerFilter: "input"},
-            {title: "Атрибуты", field: "attributes", formatter: "plaintext", width: 300},
+            {title: "Атрибуты", field: "attributes", formatter: "plaintext"},
             {title: "Действия", formatter: function(cell) {
                 var rowData = cell.getData();
                 var id = rowData.id;
@@ -40,5 +49,7 @@
             }, width: 150}
         ]
     });
+    table.setPage(1);
+    table.setMaxPage(2);
 </script>
 {% endblock %}

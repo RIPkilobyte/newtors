@@ -20,8 +20,8 @@ class EquipmentType
     #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(targetEntity: EquipmentTypeAttribute::class, mappedBy: 'type', fetch: 'EAGER')]
-    private Collection $typeAttributes;
+    #[ORM\OneToMany(targetEntity: EquipmentTypeAttribute::class, mappedBy: 'equipmentType', fetch: 'EAGER')]
+    private Collection $equipmentTypeAttributes;
 
     public function getId(): ?int
     {
@@ -43,25 +43,25 @@ class EquipmentType
     /**
      * @return Collection<int, EquipmentTypeAttribute>
      */
-    public function getTypeAttributes(): Collection
+    public function getEquipmentTypeAttributes(): Collection
     {
-        return $this->typeAttributes;
+        return $this->equipmentTypeAttributes;
     }
 
-    public function addTypeAttribute(EquipmentTypeAttribute $typeAttribute): static
+    public function addEquipmentTypeAttribute(EquipmentTypeAttribute $equipmentTypeAttributes): static
     {
-        if (!$this->typeAttributes->contains($typeAttribute)) {
-            $this->typeAttributes->add($typeAttribute);
-            $typeAttribute->setType($this);
+        if (!$this->equipmentTypeAttributes->contains($equipmentTypeAttributes)) {
+            $this->equipmentTypeAttributes->add($equipmentTypeAttributes);
+            $equipmentTypeAttributes->setEquipmentType($this);
         }
         return $this;
     }
 
-    public function removeTypeAttribute(EquipmentTypeAttribute $typeAttribute): static
+    public function removeEquipmentTypeAttribute(EquipmentTypeAttribute $equipmentTypeAttributes): static
     {
-        if ($this->typeAttributes->removeElement($typeAttribute)) {
-            if ($typeAttribute->getType() === $this) {
-                $typeAttribute->setType(null);
+        if ($this->equipmentTypeAttributes->removeElement($equipmentTypeAttributes)) {
+            if ($equipmentTypeAttributes->getEquipmentType() === $this) {
+                $equipmentTypeAttributes->setEquipmentType(null);
             }
         }
         return $this;
